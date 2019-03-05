@@ -1,5 +1,5 @@
 
-import React, { PureComponent } from 'react'
+import React, { PureComponent, createRef } from 'react'
 import { createStore } from 'redux'
 import { connect, Provider } from 'react-redux'
 import userReducer, { initialState, userMapStateToProps, userDispatch } from './user'
@@ -15,6 +15,7 @@ const UserEdit = connect(userMapStateToProps, userDispatch)(class UserEditCompon
             last_name: props.last_name,
             id: props.id
         }
+        this.renderCount = createRef(0)
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
@@ -33,6 +34,9 @@ const UserEdit = connect(userMapStateToProps, userDispatch)(class UserEditCompon
         record('UserEdit', id)
         return (
             <form onSubmit={this.handleSubmit}>
+
+                Render Count: {++this.renderCount.current};
+
                 <label htmlFor="first-name">First Name</label>
                 <input value={first_name} onChange={this.handleUpdate('first_name')} id="first-name"></input>
 
@@ -53,6 +57,7 @@ const UserAdd = connect(null, userDispatch)(class UserAddComponent extends PureC
             last_name: ''
         }
         this.handleSubmit = this.handleSubmit.bind(this)
+        this.renderCount = createRef(0)
     }
 
     handleSubmit (e) {
@@ -73,6 +78,8 @@ const UserAdd = connect(null, userDispatch)(class UserAddComponent extends PureC
         return (
             <form onSubmit={this.handleSubmit}>
 
+                Render Count: {++this.renderCount.current};
+
                 <label htmlFor="first-name">First Name</label>
                 <input value={first_name} onChange={this.handleChange('first_name')} id="first-name"></input>
 
@@ -88,6 +95,11 @@ const UserAdd = connect(null, userDispatch)(class UserAddComponent extends PureC
 
 const UserView = connect(userMapStateToProps, userDispatch)(class UserViewComponent extends PureComponent {
 
+    constructor (props) {
+        super(props)
+        this.renderCount = createRef(0)
+    }
+
     handleRemove () {
         this.props.removeUser(this.props.id)
     }
@@ -98,6 +110,7 @@ const UserView = connect(userMapStateToProps, userDispatch)(class UserViewCompon
         return (
             <div>
                 <p>
+                    Render Count: {++this.renderCount.current};
                     {id} - {first_name} - {last_name}
                     <button type="button" onClick={this.handleRemove}>Remove</button>
                 </p>
@@ -107,11 +120,17 @@ const UserView = connect(userMapStateToProps, userDispatch)(class UserViewCompon
 })
 
 const UserList = connect(users => ({ users }))(class UserListComponent extends PureComponent {
+    constructor (props) {
+        super(props)
+
+        this.renderCount = createRef(0)
+    }
     render () {
         record('UserList')
         const {users} = this.props
         return (
             <>
+                Render Count: {++this.renderCount.current};
                 <h2>Users (read-only)</h2>
                 <ul>
                     {users.map(user => <li key={user.id}><UserView id={user.id} /></li>)}
@@ -130,6 +149,10 @@ const UserList = connect(users => ({ users }))(class UserListComponent extends P
 const store = createStore(userReducer, initialState)
 
 export class App extends PureComponent {
+    constructor (props) {
+        super(props)
+        this.renderCount = createRef(0)
+    }
     render () {
         record('App')
         return (

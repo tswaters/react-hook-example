@@ -1,5 +1,5 @@
 
-import React, { useState, useCallback, useReducer, createContext } from 'react'
+import React, { useRef, useState, useCallback, useReducer, createContext } from 'react'
 import userReducer, { userMapStateToProps, initialState, userDispatch } from './user'
 
 const getDisplayName = WrappedComponent => WrappedComponent.displayName || WrappedComponent.name || 'Component'
@@ -37,11 +37,13 @@ const Provider = React.memo(({ children }) => {
 Provider.displayName = 'Provider'
 
 export const App = React.memo(() => {
+    const renderCount = useRef(0)
     record('App')
     return (
         <Provider>
             <h1>Hooks</h1>
             {React.version}
+            Render Count: {++renderCount.current};
             <UserList />
         </Provider>
     )
@@ -52,6 +54,7 @@ App.displayName = 'App'
 const UserEditComponent =
     ({ editUser, id, first_name: initial_first_name, last_name: initial_last_name }) => {
 
+        const renderCount = useRef(0)
         const [ first_name, set_first_name ] = useState(initial_first_name)
         const [ last_name, set_last_name ] = useState(initial_last_name)
 
@@ -68,6 +71,9 @@ const UserEditComponent =
 
         return (
             <form onSubmit={handleSubmit}>
+
+                Render Count: {++renderCount.current};
+
                 <label htmlFor="first-name">First Name</label>
                 <input value={first_name} onChange={updateFirstName} id="first-name"></input>
 
@@ -86,6 +92,8 @@ const UserEdit = connect(userMapStateToProps, userDispatch)(React.memo(UserEditC
 const UserAddComponent =
     ({ addUser }) => {
 
+        const renderCount = useRef(0)
+
         const [ first_name, set_first_name ] = useState('')
         const [ last_name, set_last_name ] = useState('')
 
@@ -103,6 +111,7 @@ const UserAddComponent =
         record('UserAdd')
         return (
             <form onSubmit={handleSubmit}>
+                Render Count: {++renderCount.current};
 
                 <label htmlFor="first-name">First Name</label>
                 <input value={first_name} onChange={updateFirstName} id="first-name"></input>
@@ -123,12 +132,15 @@ const UserAdd = connect(null, userDispatch)(React.memo(UserAddComponent))
 const UserViewComponent =
    ({ removeUser, id, first_name, last_name }) => {
 
+        const renderCount = useRef(0)
+
         const handleRemove = useCallback(() => removeUser(id), [id])
 
         record('UserView', id)
         return (
             <div>
                 <p>
+                    Render Count: {++renderCount.current};
                     {id} - {first_name} - {last_name}
                     <button type="button" onClick={handleRemove}>Remove</button>
                 </p>
@@ -143,9 +155,12 @@ const UserView = connect(userMapStateToProps, userDispatch)(React.memo(UserViewC
 const UserListComponent =
     ({ users }) => {
 
+        const renderCount = useRef(0)
+
         record('UserList')
         return (
             <>
+                Render Count: {++renderCount.current};
                 <h2>Users (read-only)</h2>
                 <ul>
                     {users.map(user => <li key={user.id}><UserView id={user.id} /></li>)}
