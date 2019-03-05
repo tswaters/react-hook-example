@@ -1,12 +1,29 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import React, { useState } from 'react'
+import ReactDOM from 'react-dom'
+import './index.css'
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import {App as HooksApplication} from './app-hooks'
+import {App as ComponentApplication} from './app-components'
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
-serviceWorker.unregister();
+export const Chooser = () => {
+    const [choice, set_choise] = useState('hooks')
+
+    return (
+        <div>
+            <div>
+                <label htmlFor="choice[hooks]">Hooks</label>
+                <input onChange={() => set_choise('hooks')} type="radio" name="choice" id="choice[hooks]" value="hooks" checked={choice === 'hooks'} />
+            </div>
+
+            <div>
+                <label htmlFor="choice[components]">Components</label>
+                <input onChange={() => set_choise('components')} type="radio" name="choice" id="choice[components]" value="components" checked={choice === 'components'} />
+            </div>
+
+            {choice === 'hooks' && <HooksApplication />}
+            {choice === 'components' && <ComponentApplication />}
+        </div>
+    )
+}
+
+ReactDOM.render(<Chooser />, document.getElementById('root'));
