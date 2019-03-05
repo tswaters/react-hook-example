@@ -11,7 +11,7 @@ const Store = createContext()
 const connect = (mapStateToProps, mapDispatchToProps) => Component => {
     const wrapped = props =>
         <Store.Consumer>
-            {({state, dispatch}) =>
+            {({ state, dispatch }) =>
             (
                 <Component
                     {...props}
@@ -50,7 +50,7 @@ export const App = React.memo(() => {
 App.displayName = 'App'
 
 const UserEditComponent =
-    ({editUser, id, first_name: initial_first_name, last_name: initial_last_name}) => {
+    ({ editUser, id, first_name: initial_first_name, last_name: initial_last_name }) => {
 
         const [ first_name, set_first_name ] = useState(initial_first_name)
         const [ last_name, set_last_name ] = useState(initial_last_name)
@@ -121,7 +121,7 @@ UserAddComponent.displayName = 'UserAddComponent'
 const UserAdd = connect(null, userDispatch)(React.memo(UserAddComponent))
 
 const UserViewComponent =
-   ({removeUser, id, first_name, last_name}) => {
+   ({ removeUser, id, first_name, last_name }) => {
 
         const handleRemove = useCallback(() => removeUser(id), [id])
 
@@ -141,7 +141,7 @@ UserViewComponent.displayName = 'UserViewComponent'
 const UserView = connect(userMapStateToProps, userDispatch)(React.memo(UserViewComponent))
 
 const UserListComponent =
-    ({users}) => {
+    ({ users }) => {
 
         record('UserList')
         return (

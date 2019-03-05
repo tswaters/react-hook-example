@@ -106,7 +106,7 @@ const UserView = connect(userMapStateToProps, userDispatch)(class UserViewCompon
     }
 })
 
-const UserList = connect(users => ({users}))(class UserListComponent extends PureComponent {
+const UserList = connect(users => ({ users }))(class UserListComponent extends PureComponent {
     render () {
         record('UserList')
         const {users} = this.props
